@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import Theme from './styles/Theme';
 import DarkModeToggle from './components/common/Button/DarkModeButton';
 import AppRouter from './routes/AppRouter';
-import BasicLayout from "./styles/BasicLayout";
+import BasicLayout from './styles/BasicLayout';
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -18,11 +18,11 @@ const App = () => {
           <ThemeProvider theme={Theme}>
             <BasicLayout theme={Theme}>
               <DarkModeToggle />
-            <AppRouter />
+              <AppRouter />
             </BasicLayout>
           </ThemeProvider>
-          </QueryClientProvider>
-        </RecoilRoot>
+        </QueryClientProvider>
+      </RecoilRoot>
     </>
   );
 };

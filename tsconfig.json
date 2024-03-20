@@ -2,11 +2,7 @@
   "compilerOptions": {
     "types": ["vite/client", "react", "react-dom", "node"],
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -24,16 +20,13 @@
     "baseUrl": "src",
     "paths": {
       "*": ["*"],
-			"common/*": ["common/*"],
-			"design/*": ["design/*"],
-			"features/*": ["features/*"],
-			"pages/*": ["pages/*"],
-			"routes/*": ["routes/*"],
-			"translation/*": ["translation/*"]
+      "common/*": ["common/*"],
+      "design/*": ["design/*"],
+      "features/*": ["features/*"],
+      "pages/*": ["pages/*"],
+      "routes/*": ["routes/*"],
+      "translation/*": ["translation/*"]
     }
   },
-  "include": [
-    "vite.config.ts",
-    "src"
-  ]
+  "include": ["vite.config.ts", "src"]
 }
