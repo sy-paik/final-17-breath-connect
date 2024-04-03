@@ -1,63 +1,65 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { postEmailDuplicate } from '../../../api/auth';
-import { useMutation } from '@tanstack/react-query';
 import SignupForm from '../../../components/Signup/SignupForm';
+import SvgSprite from 'assets/sprite/SvgSprite';
 
 const SignupPage = () => {
-  const [isError, setIsError] = useState(false);
-  const [message, setMessage] = useState('');
-
-  const navigate = useNavigate();
-
-  const { mutate } = useMutation(['emailValid'], postEmailDuplicate, {
-    onSuccess: (res) => {
-      if (res.message === '이미 가입된 이메일 주소 입니다.') {
-        setIsError(true);
-        setMessage(res.message);
-      } else {
-        setIsError(false);
-        setMessage(res.message);
-      }
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-
-  const onSuccess = (formData) => {
-    navigate('/signup/profile', {
-      state: {
-        email: formData.email,
-        password: formData.password,
-      },
-    });
-  };
-
   return (
-    <Container>
-      <Title>회원가입</Title>
-      <SignupForm
-        onSuccess={onSuccess}
-        mutate={mutate}
-        isError={isError}
-        message={message}
-      />
-    </Container>
+    <SingupContainer>
+      <LogoSection>
+        <h1>
+          <SvgSprite id='logo-text' color='white' width={120} />
+        </h1>
+        <h2>함께 달리는 즐거움을 나눌 수 있는 공간</h2>
+      </LogoSection>
+      <LoginSection>
+        <h3>이메일로 회원가입</h3>
+        <SignupForm />
+      </LoginSection>
+    </SingupContainer>
   );
 };
 
 export default SignupPage;
 
-const Container = styled.main`
-  margin: 0 auto;
+const LogoSection = styled.section`
+  width: 50%;
+  background-image: linear-gradient(#260a52, #6521d3);
+  position: relative;
+  h1 {
+    margin-top: 30%;
+  }
+  h2 {
+    color: white;
+  }
+  h1,
+  h2 {
+    margin-left: 83px;
+    font-size: 16px;
+  }
 `;
 
-const Title = styled.h1`
-  padding-top: 2.7rem;
-  margin-bottom: 4.5rem;
-  color: ${({ theme }) => theme.colors.blackText};
-  font-size: ${({ theme }) => theme.fontSize.xxlarge};
-  text-align: center;
+const SingupContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+
+  @media (max-width: 820px) {
+    ${LogoSection} {
+      display: hidden;
+    }
+  }
+`;
+
+const LoginSection = styled.section`
+  width: 50%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10%;
+  gap: 10%;
+  h3 {
+    font-size: large;
+  }
 `;
