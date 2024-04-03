@@ -1,12 +1,21 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import AddImg from '../../../assets/sprite/img-btn.svg';
-import AddDarkImg from '../../../assets/sprite/img-btn-dark.svg';
 import BasicProfileImg from '../../../assets/images/basic-profile-l.svg';
 
-const ProfileImage = ({ prevImage, previewImage, handleImage }) => {
+interface ProfileImageProps {
+  prevImage?: string;
+  previewImage: string | null;
+  handleImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const ProfileImage = ({
+  prevImage,
+  previewImage,
+  handleImage,
+}: ProfileImageProps) => {
   return (
-    <>
+    <React.Fragment>
       <Label htmlFor='image'>
         <Image
           src={previewImage || prevImage || BasicProfileImg}
@@ -15,11 +24,11 @@ const ProfileImage = ({ prevImage, previewImage, handleImage }) => {
       </Label>
       <ImageInput
         type='file'
-        accept='image/png, image/jpg, image/jpeg'
+        accept='image/*'
         id='image'
         onChange={handleImage}
       />
-    </>
+    </React.Fragment>
   );
 };
 
@@ -45,11 +54,6 @@ const Label = styled.label`
     height: 3.6rem;
     background: url(${AddImg}) no-repeat center / 3.6rem 3.6rem;
     z-index: 2;
-    ${({ isDarkMode }) =>
-      isDarkMode &&
-      css`
-        background: url(${AddDarkImg}) no-repeat center / 3.6rem 3.6rem;
-      `}
   }
 `;
 
