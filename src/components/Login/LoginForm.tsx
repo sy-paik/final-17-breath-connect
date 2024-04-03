@@ -1,63 +1,75 @@
 import React from 'react';
 import Input from '../common/Input/Input';
 import Button from '../common/Button/Button';
-import { useForm } from 'react-hook-form';
-import { useFieldController } from '../../hook/useFieldController';
-import { MESSAGE } from '../../constants/validation';
+import styled from 'styled-components';
+import { usePostLogin } from 'hook/api/auth/usePostLogin';
 
-const LoginForm = ({ mutate, isError, message }) => {
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    formState: { errors },
-  } = useForm({
-    mode: 'onBlur',
-    defaultValues: {
-      email: 'breath_connect@test.com',
-      password: 'bc12345',
-    },
+const LoginForm = () => {
+  const [loginInfo, setLoginInfo] = React.useState({
+    email: '',
+    password: '',
   });
 
-  const emailController = useFieldController('email', control, {
-    required: MESSAGE.EMAIL.REQUIRED,
-  });
-  const passwordController = useFieldController('password', control, {
-    required: MESSAGE.PASSWORD.REQUIRED,
-  });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginInfo({
+      ...loginInfo,
+      [name]: value,
+    });
+  };
 
-  const onSubmit = (data) => {
-    mutate(data);
+  const { mutate: login } = usePostLogin();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    login(loginInfo);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        label='이메일'
-        id='email'
-        type='email'
-        placeHolder='이메일 주소를 입력해주세요'
-        isError={errors.email?.message}
-        errorMsg={errors.email?.message}
-        {...emailController.field}
-      />
-      <Input
-        label='비밀번호'
-        id='password'
-        type='password'
-        placeHolder='비밀번호를 입력해주세요'
-        isError={errors.password?.message || isError}
-        errorMsg={errors.password?.message || (isError && message)}
-        {...passwordController.field}
-      />
+    <Form
+      onSubmit={handleSubmit}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+    >
+      <div>
+        <Input
+          label='이메일'
+          id='email'
+          name='email'
+          value={loginInfo.email}
+          type='email'
+          placeHolder='이메일 주소를 입력해주세요'
+          onChange={handleChange}
+        />
+        <Input
+          label='비밀번호'
+          id='password'
+          name='password'
+          value={loginInfo.password}
+          type='password'
+          placeHolder='비밀번호를 입력해주세요'
+          onChange={handleChange}
+        />
+      </div>
       <Button
         type='submit'
-        size='L'
-        text='로그인'
-        isDisabled={!getValues('email') || !getValues('password')}
-      />
-    </form>
+        size='lg'
+        // style={{fontSize: '14px'}}
+        // isDisabled={!getValues('email') || !getValues('password')}
+      >
+        로그인
+      </Button>
+    </Form>
   );
 };
+
+const Form = styled.form`
+  div {
+    margin-bottom: 2rem;
+  }
+`;
 
 export default LoginForm;
