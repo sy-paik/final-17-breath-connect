@@ -1,7 +1,21 @@
 import React, { forwardRef } from 'react';
 import { Container, Label, Text, ErrorMsg, SuccessMsg } from './InputStyle';
 
-const Input = forwardRef(
+interface InputProps {
+  label: string;
+  id: string;
+  type: string;
+  placeHolder: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  name?: string;
+  value?: string;
+  isError?: boolean;
+  errorMsg?: string;
+  successMsg?: string;
+}
+
+const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       label,
@@ -15,7 +29,7 @@ const Input = forwardRef(
       isError,
       errorMsg,
       successMsg,
-    },
+    }: InputProps,
     ref
   ) => {
     return (
@@ -29,7 +43,6 @@ const Input = forwardRef(
           placeholder={placeHolder}
           onChange={onChange}
           onBlur={onBlur}
-          isError={isError}
           autoComplete='off'
           ref={ref}
         />

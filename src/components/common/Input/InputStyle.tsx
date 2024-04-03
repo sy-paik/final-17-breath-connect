@@ -5,10 +5,8 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 32.2rem;
-  margin: 2rem 0;
   p {
     ${({ theme }) => css`
-      margin-top: 1rem;
       font-size: ${theme.fontSize.small};
     `}
   }
@@ -18,7 +16,7 @@ export const Label = styled.label`
   ${({ theme }) => css`
     margin-bottom: 0.6rem;
     color: ${theme.colors.textColor};
-    font-size: ${theme.fontSize.small};
+    font-size: ${theme.fontSize.sm};
   `}
 `;
 
@@ -27,7 +25,7 @@ export const Text = styled.input`
   background-color: ${({ theme }) => theme.colors.backgroundColor};
   color: ${({ theme }) => theme.colors.blackText};
   border-bottom: 0.1rem solid ${({ theme }) => theme.colors.borderColor};
-  font-size: ${({ theme }) => theme.fontSize.medium};
+  font-size: ${({ theme }) => theme.fontSize.md};
   animation: ${({ isError }) =>
     isError
       ? css`
@@ -40,7 +38,7 @@ export const Text = styled.input`
   }
   &::placeholder {
     color: ${({ theme }) => theme.colors.borderColor};
-    font-size: ${({ theme }) => theme.fontSize.medium};
+    font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;
 
