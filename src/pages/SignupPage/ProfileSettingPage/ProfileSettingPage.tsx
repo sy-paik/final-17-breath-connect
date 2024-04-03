@@ -1,72 +1,70 @@
-import { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import { postAccountnameDuplicate, postUserSignup } from '../../../api/auth';
-// import ProfileForm from '../../../components/Profile/ProfileForm/ProfileForm';
+import ProfileForm from 'components/Profile/ProfileForm/ProfileForm';
 import React from 'react';
+import SvgSprite from 'assets/sprite/SvgSprite';
+import { useLocation } from 'react-router-dom';
 
 const ProfileSettingPage = () => {
-  const [isError, setIsError] = useState(false);
-  const [message, setMessage] = useState('');
-
-  const navigate = useNavigate();
   const location = useLocation();
-  const userEmail = location.state.email;
-  const userPassword = location.state.password;
-
-  const { mutate: accountname } = useMutation(
-    ['accountnameValid'],
-    postAccountnameDuplicate,
-    {
-      onSuccess: (res) => {
-        if (res.message === '이미 가입된 계정ID 입니다.') {
-          setIsError(true);
-          setMessage(res.message);
-        } else {
-          setIsError(false);
-          setMessage(res.message);
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    }
-  );
-
-  const { mutate: signup } = useMutation(['signup'], postUserSignup, {
-    onSuccess: (res) => {
-      if (res.message === '회원가입 성공') {
-        navigate('/login');
-      } else {
-        setIsError(true);
-      }
-    },
-  });
+  const signupInfo = location.state;
 
   return (
-    <Container>
-      <Title>프로필 설정</Title>
-      <SubTitle>나중에 언제든지 변경할 수 있습니다.</SubTitle>
-      {/* <ProfileForm accountname={accountname} isError={isError} message={message} userEmail={userEmail} userPassword={userPassword} signup={signup} /> */}
-    </Container>
+    <SignupContainer>
+      <LogoSection>
+        <h1>
+          <SvgSprite id='logo-text' color='white' width={120} />
+        </h1>
+        <h2>함께 달리는 즐거움을 나눌 수 있는 공간</h2>
+      </LogoSection>
+      <SignupSection>
+        <h3>프로필 설정</h3>
+        <p>나중에 언제든지 변경할 수 있습니다.</p>
+        <ProfileForm signupInfo={signupInfo} />
+      </SignupSection>
+    </SignupContainer>
   );
 };
 
 export default ProfileSettingPage;
 
-const Container = styled.main`
-  margin: 0 auto;
+const LogoSection = styled.section`
+  width: 50%;
+  background-image: linear-gradient(#260a52, #6521d3);
+  position: relative;
+  h1 {
+    margin-top: 30%;
+  }
+  h2 {
+    color: white;
+  }
+  h1,
+  h2 {
+    margin-left: 83px;
+    font-size: 16px;
+  }
 `;
-const Title = styled.h1`
-  padding-top: 2.7rem;
-  color: ${({ theme }) => theme.colors.blackText};
-  font-size: ${({ theme }) => theme.fontSize.xxlarge};
-  text-align: center;
+
+const SignupContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+
+  @media (max-width: 820px) {
+    ${LogoSection} {
+      display: hidden;
+    }
+  }
 `;
-const SubTitle = styled.p`
-  margin-top: 1.4rem;
-  color: ${({ theme }) => theme.colors.textColor};
-  font-size: ${({ theme }) => theme.fontSize.medium};
-  text-align: center;
+
+const SignupSection = styled.section`
+  width: 50%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10%;
+  h3 {
+    font-size: large;
+    margin-bottom: 8px;
+  }
 `;
