@@ -1,84 +1,96 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import Input from '../common/Input/Input';
 import Button from '../common/Button/Button';
-import { useForm } from 'react-hook-form';
-import { useFieldController } from '../../hook/useFieldController';
-import { PATTERN, MESSAGE } from '../../constants/validation';
+import styled from 'styled-components';
+import { usePostEmailValid } from 'hook/api/auth/usePostEmailValid';
+import { PATTERN } from 'constants/validation';
+import { useNavigate } from 'react-router-dom';
+import { ROUTE } from 'constants/route';
 
-const SignupForm = ({ onSuccess, mutate, isError, message }) => {
-  const {
-    control,
-    getValues,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    mode: 'onBlur',
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+const SignupForm = () => {
+  const [signupInfo, setSignupInfo] = React.useState({
+    email: '',
+    password: '',
   });
+  const [passwordValid, setPasswordValid] = React.useState<boolean>(false);
+  const [valid, setValid] = React.useState<boolean>(false);
 
-  const emailController = useFieldController('email', control, {
-    required: MESSAGE.EMAIL.REQUIRED,
-    pattern: {
-      value: PATTERN.EMAIL,
-      message: MESSAGE.EMAIL.PATTERN,
-    },
-    onBlur: () => {
-      validation();
-    },
-  });
+  const navigate = useNavigate();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setSignupInfo({
+      ...signupInfo,
+      [name]: value,
+    });
+  };
 
-  const passwordController = useFieldController('password', control, {
-    required: MESSAGE.PASSWORD.REQUIRED,
-    pattern: {
-      value: PATTERN.PASSWORD,
-      message: MESSAGE.PASSWORD.PATTERN,
-    },
-  });
+  const { mutate: emailValid, data: emailValidRes } = usePostEmailValid();
 
-  const validation = () => {
-    if (!errors.email?.message && emailController.field.value) {
-      mutate(emailController.field.value);
+  const handleEmailValid = () => {
+    emailValid({ email: signupInfo.email });
+  };
+
+  const successMsg = emailValidRes?.data.message;
+
+  const handlePasswordValid = () => {
+    if (PATTERN.PASSWORD.test(signupInfo.password)) {
+      setPasswordValid(true);
+    } else {
+      setPasswordValid(false);
     }
   };
 
-  const onSubmit = (data) => {
-    if (!errors.email && !errors.password && !isError) {
-      onSuccess(data);
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (passwordValid && successMsg === '사용 가능한 이메일 입니다.') {
+      setValid(true);
+      navigate(ROUTE.SIGNUP_PROFILE, {
+        state: signupInfo,
+      });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        label='이메일'
-        id='email'
-        type='email'
-        placeHolder='이메일 주소를 입력해주세요'
-        isError={errors.email?.message || isError}
-        errorMsg={errors.email?.message || (isError && message)}
-        successMsg={!isError && message}
-        {...emailController.field}
-      />
-      <Input
-        label='비밀번호'
-        id='password'
-        type='password'
-        placeHolder='비밀번호를 입력해주세요'
-        isError={errors.password?.message}
-        errorMsg={errors.password?.message}
-        {...passwordController.field}
-      />
+    <Form onSubmit={handleSubmit}>
+      <div>
+        <Input
+          label='이메일'
+          id='email'
+          name='email'
+          value={signupInfo.email}
+          type='email'
+          placeHolder='이메일 주소를 입력해주세요'
+          onChange={handleChange}
+          onBlur={handleEmailValid}
+        />
+        <Input
+          label='비밀번호'
+          id='password'
+          name='password'
+          value={signupInfo.password}
+          type='password'
+          placeHolder='비밀번호를 입력해주세요'
+          onChange={handleChange}
+          onBlur={handlePasswordValid}
+        />
+      </div>
       <Button
         type='submit'
-        size='L'
-        text='회원가입'
-        isDisabled={!getValues('email') || !getValues('password')}
-      />
-    </form>
+        size='lg'
+        style={{ fontSize: '14px' }}
+        isDisabled={valid}
+        // isDisabled={!getValues('email') || !getValues('password')}
+      >
+        회원가입
+      </Button>
+    </Form>
   );
 };
+
+const Form = styled.form`
+  div {
+    margin-bottom: 2rem;
+  }
+`;
 
 export default SignupForm;
