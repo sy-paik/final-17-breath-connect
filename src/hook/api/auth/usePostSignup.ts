@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { ROUTE } from 'constants/route';
 
-interface SignupRequest extends LoginSignupRequest {
+export interface SignupRequest extends LoginSignupRequest {
   username: string;
   accountname: string;
   intro: string;
@@ -23,7 +23,7 @@ export const usePostSignup = () => {
     mutationKey: ['postSignup'],
     mutationFn: postSignup,
     onSuccess: () => {
-      navigate(ROUTE.SIGNUP_PROFILE);
+      navigate(ROUTE.LOGIN);
     },
   });
 };
